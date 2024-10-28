@@ -203,16 +203,28 @@ function generateLink() {
       <div style={{width:'100%' ,textAlign:"center"}}>
       <Button variant="bordered" style={{width:"50%"}} onClick={() => {navigator.clipboard.writeText(finalLink)}} >Copy</Button>
       <Button variant="bordered" style={{width:"50%"}} onClick={
-        location.href = twitterLink
+        () => {
+          location.href = twitterLink
+        }
+
       } >Share on X!</Button>
 
       </div>
-
       </div>
     : null
 
     }
 
+
+{
+  isGenerated ?
+  <div style={{width:'100%' , textAlign:"center"}} >
+    Preview :
+  <iframe src={finalLink} frameBorder="0" width="100%" height="1000px" allowFullScreen></iframe> 
+  </div>
+
+  : null
+}
 
 
     </section>
