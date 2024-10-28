@@ -27,6 +27,7 @@ import {ConnectWallet} from"@/components/connectwallet"
 import React, { FC, useCallback, useState, useEffect } from 'react';
 
 import { Input } from "@nextui-org/input";
+import { Router } from "next/router";
 
 export default function Home() {
   const swapItem = [
@@ -41,62 +42,85 @@ export default function Home() {
   ]
 
   const [token, setToken] = useState("");
-  const [rate, setRate] = useState(0.01);
+  const [rate, setRate] = useState("0.01");
   const [address, setAddress] = useState("");
   const [swap, setSwap] = useState('pump');
 
-  let publicKey;
-  let sendTransaction;
+  const [isGenerated, setIsGenerated] = useState(false);
+
+  const [finalLink, setFinalLink] = useState("");
+  const [twitterLink , setTwitterLink] = useState("")
 
 
-  async function testWallet() {
-    // const { publicKey, sendTransaction } = useWallet();
-    // console.log(publicKey)
+const { publicKey } = useWallet();
+function sleep(ms:number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function generateLink() {
+  console.log(publicKey,publicKey != null)
+  let add = ""
+    if(publicKey != null)
+    {
+      add = publicKey.toBase58()
+    }else{
+      add = address
+    }
+  let tk = ""
+    if(token)
+    {
+      tk = token
+    }else{
+      tk = "Eq1Wrk62j2F2tLf9XfdBssYJVr5k8oLJx3pqEL1rpump"
+    }
+  let rt = 0.01
+  if(Number(rate)&&Number(rate)>=0&&Number(rate)<3)
+  {
+    rt = Number(rate);
   }
+
+  let final = ""
+  if(swap == "pump")
+  {
+    final = `https://dial.to/?action=solana-action:https://funproxy.site/api/pump/${tk}:${add}:${rt}`
+    setFinalLink(
+      final
+    )
+    setIsGenerated(true)
+  }
+
+  if(swap == "raydium")
+  {
+    final = `https://dial.to/?action=solana-action:https://funproxy.site/api/raydium/${tk}:${add}:${rt}`
+    setFinalLink(
+      final
+    )
+    setIsGenerated(true)
+  }
+  
+  setTwitterLink(`https://twitter.com/intent/tweet?text= 🚀Pump it ! : ${encodeURI(final)}`)
+    console.log(
+      token,
+      rate,
+      add,
+      swap
+    )
+  }
+  useEffect(() => {
+  }, [])
+
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-xl text-center justify-center">
-        <span className={title()}>Make&nbsp;</span>
-        <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
-        <br />
-        <span className={title()}>
-          websites regardless of your design experience.
+        <span className={title()}>Share Token on &nbsp;</span>
+        <br></br>
+        <span className={title({ color: "violet" })}>Pump&nbsp;</span>
+        <span className={title()}>or  <span className={title({ color: "violet" })}>Raydiun&nbsp;</span>
         </span>
         <div className={subtitle({ class: "mt-4" })}>
-          Beautiful, fast and modern React UI library.
+          Simply via  <span className={title({ color: "violet" })}>Blinks&nbsp;</span>
         </div>
       </div>
-
-      <div className="flex gap-3">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
-        >
-          Documentation
-        </Link>
-        <Link
-          isExternal
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href={siteConfig.links.github}
-        >
-          <GithubIcon size={20} />
-          GitHub
-        </Link>
-      </div>
-
-      <div className="mt-8">
-        <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
-        </Snippet>
-      </div>
-
       <Card className="max-w-[800px] w-[60%]">
       <CardHeader className="flex gap-3">
         <Image
@@ -106,9 +130,19 @@ export default function Home() {
           src="./logo.png"
           width={40}
         />
-        <div className="flex flex-col">
-          <p className="text-md">Funproxy</p>
-          <p className="text-small text-default-500">funproxy.site</p>
+
+
+        <div style={{width:"100%" , display:"flex"}}>
+          <div className="flex flex-col" style={{width:"70%"}}>
+            <p className="text-md">Funproxy</p>
+            <p className="text-small text-default-500">funproxy.site</p>
+          </div>
+        <div style={{paddingRight:"0px"}}>
+              {/* <WalletMultiButton></WalletMultiButton> */}
+              {/* <WalletMultiButton> </WalletMultiButton> */}
+              <WalletMultiButton className="btn btn-ghost" />
+              {/* <ConnectWallet onUseWalletClick={onUseWalletClick} /> */}
+        </div>
         </div>
       </CardHeader>
       <Divider/>
@@ -132,25 +166,55 @@ export default function Home() {
               </DropdownMenu>
             </Dropdown>
         <div  className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-          <Input type="text" variant={'underlined'} label="Token Address"placeholder="Enter the token address" />
-          <Input type="number" variant={'underlined'} label="Referral rate" placeholder="Enter your referral rate , 1% ~ 3%" />
+          <Input type="text" variant={'underlined'} label="Token Address"placeholder="Enter the token address"
+           onChange={e => { setToken(e.currentTarget.value); }}
+          />
+          <Input type="number" variant={'underlined'} label="Referral rate" placeholder="Enter your referral rate , 1% ~ 3%"
+           onChange={e => { setRate(e.currentTarget.value); }}
+          />
         </div>
         <div  className="flex w-full ">
-          <Input  style={{width:"40%"}} type="text" variant={'underlined'} label="Referral Address" placeholder="Enter your solana wallet address" />
-          <WalletMultiButton style={{width:"100%"}}></WalletMultiButton>
+          <Input type="text" variant={'underlined'} label="Referral Address" placeholder="Enter your solana wallet address" value={publicKey?.toBase58()}
+            onChange={e => { setAddress(e.currentTarget.value); }}
+          />
+         
         </div>
           <br></br>
 
       </CardBody>
       <Divider/>
       <CardFooter>
-      <Button style={{width:'100%'}}>
+      <Button style={{width:'100%'}} onClick={generateLink}>
             Generate Link
           </Button>
       </CardFooter>
     </Card>
     {/* <ConnectWallet /> */}
     
+
+    {
+      isGenerated ? 
+      <div className="mt-8">
+      <Snippet hideCopyButton hideSymbol variant="bordered">
+        <span>
+          {finalLink}
+        </span>
+      </Snippet>
+      <div style={{width:'100%' ,textAlign:"center"}}>
+      <Button variant="bordered" style={{width:"50%"}} onClick={() => {navigator.clipboard.writeText(finalLink)}} >Copy</Button>
+      <Button variant="bordered" style={{width:"50%"}} onClick={
+        location.href = twitterLink
+      } >Share on X!</Button>
+
+      </div>
+
+      </div>
+    : null
+
+    }
+
+
+
     </section>
   );
 }
