@@ -19,7 +19,12 @@ import { Button } from "@nextui-org/button"
 
 import {Divider} from "@nextui-org/divider"
 
-import { useState, useEffect } from 'react'
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import {ConnectWallet} from"@/components/connectwallet"
+// import nacl from "tweetnacl"; 
+import React, { FC, useCallback, useState, useEffect } from 'react';
 
 import { Input } from "@nextui-org/input";
 
@@ -39,7 +44,15 @@ export default function Home() {
   const [rate, setRate] = useState(0.01);
   const [address, setAddress] = useState("");
   const [swap, setSwap] = useState('pump');
-  
+
+  let publicKey;
+  let sendTransaction;
+
+
+  async function testWallet() {
+    // const { publicKey, sendTransaction } = useWallet();
+    // console.log(publicKey)
+  }
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-xl text-center justify-center">
@@ -122,8 +135,9 @@ export default function Home() {
           <Input type="text" variant={'underlined'} label="Token Address"placeholder="Enter the token address" />
           <Input type="number" variant={'underlined'} label="Referral rate" placeholder="Enter your referral rate , 1% ~ 3%" />
         </div>
-        <div  className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-          <Input type="text" variant={'underlined'} label="Referral Address" placeholder="Enter your solana wallet address" />
+        <div  className="flex w-full ">
+          <Input  style={{width:"40%"}} type="text" variant={'underlined'} label="Referral Address" placeholder="Enter your solana wallet address" />
+          <WalletMultiButton style={{width:"100%"}}></WalletMultiButton>
         </div>
           <br></br>
 
@@ -135,7 +149,8 @@ export default function Home() {
           </Button>
       </CardFooter>
     </Card>
-
+    {/* <ConnectWallet /> */}
+    
     </section>
   );
 }
