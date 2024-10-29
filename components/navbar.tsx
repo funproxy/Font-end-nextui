@@ -131,7 +131,7 @@ export const Navbar = () => {
                 href="#"
                 size="lg"
               >
-                {item.label}
+                {/* {item.label} */}
               </Link>
             </NavbarMenuItem>
           ))}

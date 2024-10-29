@@ -159,7 +159,11 @@ function generateLink() {
               </DropdownTrigger>
               <DropdownMenu 
                 aria-label="Action event example" 
-                onAction={(key) => setSwap(key)}
+                onAction={(key:any) => 
+                  {
+                    setSwap(key.toString())
+                  }
+                  }
               >
                 <DropdownItem key="pump">pump</DropdownItem>
                 <DropdownItem key="raydium">raydium</DropdownItem>
