@@ -87,9 +87,9 @@ export const Navbar = () => {
           <Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
             <DiscordIcon className="text-default-500" />
           </Link>
-          {/* <Link isExternal aria-label="Github" href={siteConfig.links.github}>
+          <Link isExternal aria-label="Github" href={siteConfig.links.github}>
             <GithubIcon className="text-default-500" />
-          </Link> */}
+          </Link>
           {/* <ThemeSwitch /> */}
         </NavbarItem>
         {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem> */}
@@ -102,7 +102,7 @@ export const Navbar = () => {
             startContent={<HeartFilledIcon className="text-danger" />}
             variant="flat"
           >
-            Sponsor
+            Sponsor Our Token!
           </Button>
         </NavbarItem>
       </NavbarContent>

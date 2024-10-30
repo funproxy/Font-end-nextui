@@ -7,7 +7,7 @@ import { button as buttonStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+import {   TwitterIcon } from "@/components/icons";
 
 import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
 
@@ -64,7 +64,13 @@ function generateLink() {
     {
       add = publicKey.toBase58()
     }else{
-      add = address
+      if(address && address!="")
+      {
+        add = address
+      }else{
+        add = "GQ7w9PVB7YMFnVro8JJL4ZP8tjiseCMJUMYWp9MeWFEx"
+      }
+     
     }
   let tk = ""
     if(token)
@@ -146,10 +152,13 @@ function generateLink() {
         </div>
       </CardHeader>
       <Divider/>
-      <CardBody>
+      <CardBody style={{textAlign:"center"}}>
         <h3>Generate your referral link for tokens you pump !</h3>
           <br></br>
-          <Dropdown>
+
+
+        <div style={{textAlign:"center"}}>
+        <Dropdown>
               <DropdownTrigger>
                 <Button 
                   variant="bordered" 
@@ -169,13 +178,36 @@ function generateLink() {
                 <DropdownItem key="raydium">raydium</DropdownItem>
               </DropdownMenu>
             </Dropdown>
+
+            <Dropdown>
+              <DropdownTrigger>
+                <Button 
+                  variant="bordered" 
+                >
+                  {(Number(rate)*100)}%
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu 
+                aria-label="Action event example" 
+                onAction={(key:any) => 
+                  {
+                    setRate(key)
+                  }
+                  }
+              >
+                <DropdownItem key="0.01">1%</DropdownItem>
+                <DropdownItem key="0.02">2%</DropdownItem>
+                <DropdownItem key="0.03">3%</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+        </div>
         <div  className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
           <Input type="text" variant={'underlined'} label="Token Address"placeholder="Enter the token address"
            onChange={e => { setToken(e.currentTarget.value); }}
           />
-          <Input type="number" variant={'underlined'} label="Referral rate" placeholder="Enter your referral rate , 1% ~ 3%"
+          {/* <Input type="number" variant={'underlined'} label="Referral rate" placeholder="Enter your referral rate , 1% ~ 3%"
            onChange={e => { setRate(e.currentTarget.value); }}
-          />
+          /> */}
         </div>
         <div  className="flex w-full ">
           <Input type="text" variant={'underlined'} label="Referral Address" placeholder="Enter your solana wallet address" value={publicKey?.toBase58()}
@@ -188,7 +220,7 @@ function generateLink() {
       </CardBody>
       <Divider/>
       <CardFooter>
-      <Button style={{width:'100%'}} onClick={generateLink}>
+      <Button color="secondary" style={{width:'100%'}} onClick={generateLink}>
             Generate Link
           </Button>
       </CardFooter>
@@ -206,12 +238,12 @@ function generateLink() {
       </Snippet>
       <div style={{width:'100%' ,textAlign:"center"}}>
       <Button variant="bordered" style={{width:"50%"}} onClick={() => {navigator.clipboard.writeText(finalLink)}} >Copy</Button>
-      <Button variant="bordered" style={{width:"50%"}} onClick={
+      <Button variant="bordered" style={{width:"50%"}} endContent={<TwitterIcon/>} onClick={
         () => {
           location.href = twitterLink
         }
 
-      } >Share on X!</Button>
+      } >Share to </Button>
 
       </div>
       </div>
